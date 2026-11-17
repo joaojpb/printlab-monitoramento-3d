@@ -1,7 +1,7 @@
 // Configuração do app Web do projeto Projeto FSG.
 // Estes dados identificam o app web e podem ficar no GitHub; nunca coloque uma chave de conta de serviço aqui.
 export const firebaseConfig = {
-  apiKey: "AIzaSyB1WpNfWKJShTtfGRnnjwknGULanQH8",
+  apiKey: "AIzaSyB1WpNfxUKlShTtfGRpnnjwkpGUYLqn8H8",
   authDomain: "projeto-fsg.firebaseapp.com",
   databaseURL: "https://projeto-fsg-default-rtdb.firebaseio.com",
   projectId: "projeto-fsg",
