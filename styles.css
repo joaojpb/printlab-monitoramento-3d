@@ -189,3 +189,68 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 650px) { body { min-width: 360px; } .main-content { padding: 0 15px 18px; } .topbar { height: 57px; } .today-label { display: none; } .page-heading { padding: 25px 0 20px; align-items: flex-start; gap: 12px; } .page-heading h1 { font-size: 23px; } .page-heading p { max-width: 220px; line-height: 1.5; } .page-heading > .button { margin-top: 20px; height: 34px; padding: 0 10px; white-space: nowrap; font-size: 9px; } .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-bottom: 15px; } .stat-card { min-height: 104px; padding: 12px; } .stat-top { font-size: 9px; } .stat-icon { width: 23px; height: 23px; } .stat-value { font-size: 21px; } #stat-cost { font-size: 18px; } .section-header { padding: 15px 13px 12px; align-items: flex-start; gap: 10px; flex-direction: column; } .section-header p { font-size: 9px; } .search-box { width: 100%; } .toolbar { padding: 0 12px; align-items: flex-start; flex-direction: column; } .filters { width: 100%; overflow-x: auto; gap: 12px; } .filter-button { flex: 0 0 auto; } .sort-button { padding: 0 0 9px; font-size: 9px; } .table-footer { padding: 10px 13px; } .live-indicator { font-size: 8px; } .modal { padding: 19px 17px 16px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
 
+/* Larger type and dedicated printer artwork for comfortable reading. */
+body { font-size: 16px; }
+.workspace-label { font-size: 10px; }
+.nav-link { font-size: 14px; }
+.help-card strong { font-size: 15px; }
+.help-card p { font-size: 12px; }
+.connection strong { font-size: 12px; }
+.connection small { font-size: 11px; }
+.profile strong, .profile small { font-size: 11px; }
+.breadcrumb { font-size: 12px; }
+.topbar-right { font-size: 12px; }
+.eyebrow { font-size: 10px; }
+.page-heading h1 { font-size: 30px; }
+.page-heading p { font-size: 14px; }
+.button { font-size: 12px; }
+.stat-top { font-size: 12px; }
+.stat-value { font-size: 27px; }
+#stat-cost { font-size: 23px; }
+.stat-muted { font-size: 11px; }
+.section-title-row h2 { font-size: 18px; }
+.section-header p { font-size: 12px; }
+.search-box input { font-size: 12px; }
+.search-box kbd { font-size: 10px; }
+.filter-button { font-size: 11px; }
+.filter-button span { font-size: 10px; }
+.sort-button { font-size: 12px; }
+table { min-width: 850px; }
+thead th { font-size: 10px; }
+tbody td { height: 72px; font-size: 12px; }
+.printer-avatar { width: 40px; height: 40px; border-radius: 9px; display: block; flex: 0 0 auto; object-fit: cover; }
+.printer-cell { gap: 12px; }
+.printer-copy strong { font-size: 12px; }
+.project-name { font-size: 11px; }
+.status-badge { font-size: 10px; }
+.progress-value { font-size: 11px; }
+.progress-caption { font-size: 9px; }
+.time-value, .filament-value, .cost-value { font-size: 11px; }
+.cell-subtext { font-size: 10px; }
+.row-action { font-size: 17px; }
+.table-footer { font-size: 11px; }
+.live-indicator { font-size: 10px; }
+.page-footer { font-size: 11px; }
+.field { font-size: 11px; }
+.field input, .field select { font-size: 12px; }
+.cost-preview { font-size: 11px; }
+.toast { font-size: 13px; }
+
+@media (max-width: 1100px) {
+  .filter-button { font-size: 10px; }
+  .filter-button span { font-size: 9px; }
+}
+
+@media (max-width: 650px) {
+  .page-heading h1 { font-size: 26px; }
+  .page-heading p { font-size: 12px; }
+  .page-heading > .button { font-size: 11px; }
+  .stat-top { font-size: 11px; }
+  .stat-value { font-size: 23px; }
+  #stat-cost { font-size: 19px; }
+  .section-header p { font-size: 11px; }
+  .filter-button { font-size: 10px; }
+  .filter-button span { font-size: 9px; }
+  .sort-button { font-size: 11px; }
+  .live-indicator { font-size: 9px; }
+}
