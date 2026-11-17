@@ -254,3 +254,31 @@ tbody td { height: 72px; font-size: 12px; }
   .sort-button { font-size: 11px; }
   .live-indicator { font-size: 9px; }
 }
+
+/* Live Firestore collection preview in the sidebar. */
+.sidebar { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #41455a transparent; }
+.sidebar-live-panel { margin: 23px 1px 18px; padding: 13px 12px 11px; border: 1px solid #3b3f53; border-radius: 9px; background: linear-gradient(145deg, #292c40, #25283a); }
+.sidebar-live-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sidebar-live-kicker { display: block; color: #9c91d7; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
+.sidebar-live-heading h2 { margin: 4px 0 0; color: #f1effa; font: 600 13px/1.25 "Space Grotesk", sans-serif; }
+.sidebar-live-count { min-width: 28px; padding: 4px 6px; border-radius: 5px; background: #3a3654; color: #d6ccff; font-size: 10px; font-weight: 700; text-align: center; }
+.sidebar-live-connection { display: flex; align-items: center; gap: 7px; margin-top: 10px; color: #aeb3c2; font-size: 10px; }
+.sidebar-live-connection strong { font-weight: 600; }
+.sidebar-live-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: #dfa954; box-shadow: 0 0 0 3px #514431; }
+.sidebar-live-dot.is-connected { background: #52d2a2; box-shadow: 0 0 0 3px #314d4b; }
+.sidebar-live-dot.is-pending { animation: live-pulse 1.25s ease-in-out infinite; }
+@keyframes live-pulse { 50% { opacity: .4; } }
+.sidebar-live-list { display: grid; max-height: 280px; overflow-y: auto; margin-top: 7px; scrollbar-width: thin; scrollbar-color: #464a60 transparent; }
+.sidebar-live-row { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 40px; border-top: 1px solid #393d51; }
+.sidebar-live-icon { width: 27px; height: 27px; flex: 0 0 auto; border-radius: 6px; object-fit: cover; }
+.sidebar-live-copy { min-width: 0; display: grid; gap: 3px; }
+.sidebar-live-name { overflow: hidden; color: #ececf4; font-size: 10px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-live-status { overflow: hidden; color: #a4aabd; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-live-status[data-status="Imprimindo"] { color: #80baff; }
+.sidebar-live-status[data-status="Em espera"] { color: #e7bd79; }
+.sidebar-live-status[data-status="Concluída"] { color: #76d1ad; }
+.sidebar-live-status[data-status="Manutenção"] { color: #ed929e; }
+.sidebar-live-empty { margin: 8px 0 2px; color: #a2a8ba; font-size: 10px; line-height: 1.5; }
+.sidebar-live-updated { margin-top: 8px; color: #858ba0; font-size: 9px; }
+@media (max-height: 820px) { .sidebar-live-list { max-height: 170px; } }
+@media (max-width: 850px) { .sidebar-live-panel { display: none; } }
