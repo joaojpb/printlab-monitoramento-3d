@@ -74,12 +74,27 @@ function updateStats() {
   $("#filter-maintenance").textContent = String(counts.Manutenção).padStart(2, "0");
 }
 
-function makeRow(printer, index) {
+function printerIconFor(machine) {
+  const name = String(machine || "").toLocaleLowerCase("pt-BR");
+  if (name.includes("ender")) return "assets/printers/creality-ender3.svg";
+  if (name.includes("bambu")) return "assets/printers/bambu-p1s.svg";
+  if (name.includes("creality k1") || name === "k1") return "assets/printers/creality-k1.svg";
+  if (name.includes("kobra")) return "assets/printers/anycubic-kobra2.svg";
+  if (name.includes("prusa")) return "assets/printers/prusa-mk4.svg";
+  return "assets/printers/generic.svg";
+}
+
+function makeRow(printer) {
   const row = $("#row-template").content.firstElementChild.cloneNode(true);
   row.dataset.id = printer.id;
   const avatar = $(".printer-avatar", row);
-  avatar.textContent = printer.machine.trim().slice(0, 1).toUpperCase();
-  avatar.classList.add(`avatar-${index % 5}`);
+  avatar.src = printerIconFor(printer.machine);
+  avatar.alt = "";
+  avatar.loading = "lazy";
+  avatar.onerror = () => {
+    avatar.onerror = null;
+    avatar.src = "assets/printers/generic.svg";
+  };
   $(".machine-name", row).textContent = printer.machine;
   $(".project-name", row).textContent = `${printer.project} · ${printer.material || "PLA"}`;
   const badge = $(".status-badge", row);
@@ -291,4 +306,3 @@ function start() {
 }
 
 start();
-
