@@ -10,7 +10,7 @@ const demoPrinters = [
   { id: "demo-prusa", machine: "Prusa MK4", project: "Revisão do extrusor", material: "PLA", status: "Manutenção", durationHours: 0, filamentGrams: 0, filamentCostPerKg: 100, progress: 0, createdAt: Date.now() - 1000 * 60 * 60 * 29 }
 ];
 
-const state = { printers: [], filter: "Todos", search: "", newestFirst: true, editingId: null, backend: "local", db: null, firestore: null, toastTimer: null };
+const state = { printers: [], filter: "Todos", search: "", newestFirst: true, editingId: null, backend: "local", firebaseSnapshotReady: false, lastFirestoreSync: null, db: null, firestore: null, toastTimer: null };
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const listEl = $("#printer-list");
@@ -34,9 +34,14 @@ function localPrinters() {
 
 function setConnection(mode, detail) {
   state.backend = mode;
+  if (mode !== "firebase") {
+    state.firebaseSnapshotReady = false;
+    state.lastFirestoreSync = null;
+  }
   $("#connection-dot").classList.toggle("connected", mode === "firebase");
   $("#connection-label").textContent = mode === "firebase" ? "Firebase conectado" : "Modo local";
   $("#connection-detail").textContent = detail;
+  renderSidebarLive();
 }
 
 function saveLocal() {
@@ -84,6 +89,64 @@ function printerIconFor(machine) {
   return "assets/printers/generic.svg";
 }
 
+function renderSidebarLive() {
+  const list = $("#sidebar-live-list");
+  if (!list) return;
+
+  const waitingForFirebase = state.backend === "firebase" && !state.firebaseSnapshotReady;
+  const printers = waitingForFirebase ? [] : [...state.printers]
+    .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+  const count = $("#sidebar-live-count");
+  const mode = $("#sidebar-live-mode");
+  const dot = $("#sidebar-live-dot");
+  const updated = $("#sidebar-live-updated");
+
+  count.textContent = String(printers.length).padStart(2, "0");
+  mode.textContent = waitingForFirebase ? "Conectando…" : state.backend === "firebase" ? "Ao vivo" : "Modo local";
+  dot.classList.toggle("is-connected", state.backend === "firebase" && state.firebaseSnapshotReady);
+  dot.classList.toggle("is-pending", waitingForFirebase);
+  updated.textContent = state.lastFirestoreSync
+    ? `Atualizado às ${new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(state.lastFirestoreSync)}`
+    : waitingForFirebase ? "Lendo coleção printers…" : state.backend === "firebase" ? "Aguardando dados" : "Prévia neste navegador";
+
+  if (printers.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "sidebar-live-empty";
+    empty.textContent = waitingForFirebase ? "Buscando documentos…" : state.backend === "firebase" ? "A coleção printers está vazia." : "Os registros locais aparecem aqui.";
+    list.replaceChildren(empty);
+    return;
+  }
+
+  const rows = printers.map((printer) => {
+    const row = document.createElement("div");
+    row.className = "sidebar-live-row";
+
+    const icon = document.createElement("img");
+    icon.className = "sidebar-live-icon";
+    icon.src = printerIconFor(printer.machine);
+    icon.alt = "";
+    icon.setAttribute("aria-hidden", "true");
+    icon.onerror = () => {
+      icon.onerror = null;
+      icon.src = "assets/printers/generic.svg";
+    };
+
+    const copy = document.createElement("div");
+    copy.className = "sidebar-live-copy";
+    const name = document.createElement("strong");
+    name.className = "sidebar-live-name";
+    name.textContent = printer.machine || "Impressora sem nome";
+    const status = document.createElement("span");
+    status.className = "sidebar-live-status";
+    status.dataset.status = printer.status || "";
+    status.textContent = printer.status || "Sem status";
+    copy.append(name, status);
+    row.append(icon, copy);
+    return row;
+  });
+  list.replaceChildren(...rows);
+}
+
 function makeRow(printer) {
   const row = $("#row-template").content.firstElementChild.cloneNode(true);
   row.dataset.id = printer.id;
@@ -123,6 +186,7 @@ function render() {
   $("#empty-state").classList.toggle("hidden", visible.length !== 0);
   $(".table-wrap table").classList.toggle("hidden", visible.length === 0);
   $("#footer-count").textContent = `Exibindo ${visible.length} ${visible.length === 1 ? "impressora" : "impressoras"}`;
+  renderSidebarLive();
 }
 
 function showToast(message, type = "success") {
@@ -253,10 +317,13 @@ async function connectFirebase() {
   }
   setConnection("firebase", "Dados salvos no Firestore");
   firestoreSdk.onSnapshot(printersRef, (result) => {
+    state.firebaseSnapshotReady = true;
+    state.lastFirestoreSync = Date.now();
     setPrinters(result.docs.map((item) => ({ id: item.id, ...item.data() })));
     $(".live-indicator").innerHTML = "<span></span> Sincronizado com Firebase";
   }, (error) => {
     console.error("Falha na sincronização:", error);
+    setConnection("local", "Falha ao sincronizar com Firebase");
     showToast("A conexão com o Firestore foi interrompida.", "error");
   });
 }
